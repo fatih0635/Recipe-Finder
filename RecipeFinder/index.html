@@ -1,28 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recipe Finder</title>
-    <link rel="stylesheet" href="styles/style.css">
-    <link rel="manifest" href="manifest.json">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recipe Finder</title>
+  <link rel="stylesheet" href="styles/style.css">
+  <link rel="manifest" href="manifest.json">
 </head>
 <body>
-    <header>
-        <h1>Recipe Finder</h1>
-    </header>
-    <main>
-        <section id="ingredient-input">
-            <h2>Add Your Ingredients</h2>
-            <input type="text" id="ingredient" placeholder="Enter an ingredient">
-            <button id="add-ingredient">Add Ingredient</button>
-            <ul id="ingredient-list"></ul>
-        </section>
-        <section id="recipes">
-            <h2>Recipes</h2>
-            <div id="recipe-results">No recipes yet.</div>
-        </section>
-    </main>
-    <script src="scripts/app.js"></script>
+  <!-- Header -->
+  <header>
+    <h1>Recipe Finder</h1>
+    <div class="auth-buttons">
+      <button id="login-button">Login</button>
+      <button id="logout-button" style="display: none;">Logout</button>
+    </div>
+  </header>
+
+  <!-- Add Your Own Recipe Section -->
+  <div class="add-recipe-container">
+    <h2>Add Your Own Recipe</h2>
+    <form id="recipe-form">
+      <label for="user-recipe-name">Recipe Name:</label>
+      <input type="text" id="user-recipe-name" placeholder="Enter recipe name..." required />
+
+      <label for="user-recipe-description">Recipe Description:</label>
+      <textarea id="user-recipe-description" placeholder="Describe your recipe..." required></textarea>
+
+      <label for="user-recipe-image">Upload Image:</label>
+      <input type="file" id="user-recipe-image" accept="image/*" />
+
+      <div class="camera-container">
+        <button type="button" id="camera-button">Use Camera</button>
+        <div id="camera-capture"></div>
+      </div>
+
+      <button type="submit">Add Recipe</button>
+    </form>
+    <div id="user-recipe-gallery"></div>
+  </div>
+
+  <!-- Ingredients Section -->
+  <div class="ingredient-input">
+    <input type="text" id="ingredient" placeholder="Add an ingredient..." />
+    <button id="add-ingredient">Add Ingredient</button>
+    <button id="add-multiple-ingredients">Add Multiple Ingredients</button>
+  </div>
+
+  <ul id="ingredient-list"></ul>
+
+  <!-- Find Recipes Section -->
+  <div class="recipe-actions">
+    <button id="country-recipes">Find Recipes from My Country</button>
+  </div>
+
+  <div id="recipe-results"></div>
+
+  <script src="scripts/app.js"></script>
 </body>
 </html>

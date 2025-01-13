@@ -1,8 +1,10 @@
+/* General Styles */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    background-color: #f8f8f8;
 }
 
 header {
@@ -10,21 +12,135 @@ header {
     color: white;
     text-align: center;
     padding: 1em 0;
+    position: relative;
 }
 
-main {
-    padding: 1em;
+header h1 {
+    margin: 0;
 }
 
-section {
-    margin: 1em 0;
+.auth-buttons {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.auth-buttons button {
+    background-color: #fff;
+    color: #ff6f61;
+    border: 1px solid #ff6f61;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-left: 5px;
+}
+
+.auth-buttons button:hover {
+    background-color: #ff6f61;
+    color: white;
+}
+
+/* Add Your Own Recipe Section */
+.add-recipe-container {
+    background-color: #fff;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.add-recipe-container h2 {
+    color: #ff6f61;
+    text-align: center;
+}
+
+#recipe-form {
+    display: flex;
+    flex-direction: column;
+}
+
+#recipe-form label {
+    margin-top: 10px;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+#recipe-form input,
+#recipe-form textarea {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 100%;
+    font-size: 1em;
+}
+
+#recipe-form button {
+    background-color: #ff6f61;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+#recipe-form button:hover {
+    background-color: #ff5a4c;
+}
+
+/* Camera Capture */
+.camera-container {
+    margin-top: 10px;
+}
+
+#camera-capture video {
+    display: block;
+    max-width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+/* User Recipe Gallery */
+#user-recipe-gallery {
+    margin-top: 20px;
+}
+
+#user-recipe-gallery img {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 10px 0;
+}
+
+/* Ingredients Section */
+.ingredient-input {
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+}
+
+.ingredient-input input {
+    padding: 10px;
+    font-size: 1em;
+    margin-right: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 200px;
 }
 
 button {
     background-color: #ff6f61;
     color: white;
     border: none;
-    padding: 0.5em 1em;
+    padding: 10px;
     cursor: pointer;
     border-radius: 5px;
 }
@@ -33,11 +149,77 @@ button:hover {
     background-color: #ff5a4c;
 }
 
+/* Recipe Results */
+#recipe-results {
+    margin: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.recipe {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 300px;
+    text-align: center;
+}
+
+.recipe img {
+    width: 100%;
+    max-width: 300px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.recipe h3 {
+    color: #ff6f61;
+    font-size: 1.2em;
+}
+
+.recipe p {
+    margin: 5px 0;
+    font-size: 0.9em;
+    color: #555;
+}
+
+.recipe a {
+    text-decoration: none;
+    color: #ff6f61;
+    font-weight: bold;
+}
+
+.recipe a:hover {
+    text-decoration: underline;
+}
+
+/* Ingredient List */
 #ingredient-list {
-    list-style: none;
+    list-style-type: none;
     padding: 0;
+    text-align: center;
 }
 
 #ingredient-list li {
-    margin: 0.5em 0;
+    background-color: #fff;
+    margin: 5px auto;
+    padding: 10px;
+    border-radius: 5px;
+    max-width: 200px;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .add-recipe-container {
+        position: static;
+        margin: 20px auto;
+    }
+    #recipe-results {
+        flex-direction: column;
+        align-items: center;
+    }
 }
