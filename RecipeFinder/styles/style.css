@@ -40,6 +40,26 @@ header h1 {
     color: white;
 }
 
+/* Show My Recipes Button */
+#show-recipes-button {
+    background-color: #fff;
+    color: #ff6f61;
+    border: 2px solid #ff6f61;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#show-recipes-button:hover {
+    background-color: #ff6f61;
+    color: white;
+}
+
 /* Add Your Own Recipe Section */
 .add-recipe-container {
     background-color: #fff;
@@ -113,11 +133,12 @@ header h1 {
 
 #user-recipe-gallery img {
     width: 100%;
-    max-width: 300px;
-    height: auto;
+    max-width: 150px; /* Görsel boyutlandırma */
+    height: 150px;
+    object-fit: cover; /* Görseli kırpma ve orantılı boyutlandırma */
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin: 10px 0;
+    margin: 10px auto; /* Görseli ortala */
 }
 
 /* Ingredients Section */
@@ -221,5 +242,10 @@ button:hover {
     #recipe-results {
         flex-direction: column;
         align-items: center;
+    }
+    #show-recipes-button {
+        position: static;
+        margin: 10px auto;
+        display: block;
     }
 }
