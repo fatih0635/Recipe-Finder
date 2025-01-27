@@ -11,6 +11,8 @@ const ASSETS = [
   '/icons/icon-512x512.png',
 ];
 
+const API_HOSTS = ['api.spoonacular.com', 'api.opencagedata.com'];
+
 // Install Event - Static Files Caching
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -21,7 +23,7 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Activate Event - Clean Old Caches
+// Activate Event - Clean Old Caches and Preload
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -39,57 +41,65 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
-  // API çağrıları için
-  if (url.hostname === 'api.opencagedata.com' || url.hostname === 'api.spoonacular.com') {
+  // API Requests (network-first strategy)
+  if (API_HOSTS.includes(url.hostname)) {
     event.respondWith(
-      caches.match(event.request).then((cachedResponse) => {
-        return (
-          cachedResponse ||
-          fetch(event.request)
-            .then((response) => {
-              return caches.open(DYNAMIC_CACHE).then((cache) => {
-                cache.put(event.request, response.clone());
-                return response;
-              });
-            })
-            .catch(() => caches.match('/offline.html'))
-        );
-      })
+      fetch(event.request)
+        .then((response) => {
+          return caches.open(DYNAMIC_CACHE).then((cache) => {
+            cache.put(event.request, response.clone());
+            return response;
+          });
+        })
+        .catch(() => caches.match('/offline.html'))
     );
     return;
   }
 
-  // Statik varlıklar için
+  // Static Files (cache-first strategy)
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-
-      return fetch(event.request)
-        .then((networkResponse) => {
-          if (!networkResponse || networkResponse.status !== 200) {
-            return caches.match('/offline.html');
-          }
-
+      return (
+        cachedResponse ||
+        fetch(event.request).then((networkResponse) => {
           return caches.open(DYNAMIC_CACHE).then((cache) => {
             cache.put(event.request, networkResponse.clone());
             return networkResponse;
           });
-        })
-        .catch(() => caches.match('/offline.html'));
+        }).catch(() => caches.match('/offline.html'))
+      );
     })
   );
 });
 
-// Sync Event
+// Sync Event - Background Sync Logic
 self.addEventListener('sync', (event) => {
   if (event.tag === 'sync-recipes') {
     event.waitUntil(syncRecipes());
   }
 });
 
+// Sync Recipes Function
 async function syncRecipes() {
   console.log('Syncing recipes...');
-  // Add IndexedDB or local database sync logic here
+  // Example: Fetch unsynced recipes from IndexedDB and sync with API
+  const db = await openIndexedDB(); // Assuming this function exists
+  const unsyncedRecipes = await getUnsyncedRecipes(db); // Example function
+  unsyncedRecipes.forEach(async (recipe) => {
+    try {
+      const response = await fetch('https://api.example.com/sync', {
+        method: 'POST',
+        body: JSON.stringify(recipe),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (response.ok) {
+        console.log('Recipe synced:', recipe);
+        markRecipeAsSynced(db, recipe.id); // Example function
+      }
+    } catch (error) {
+      console.error('Failed to sync recipe:', recipe, error);
+    }
+  });
 }
