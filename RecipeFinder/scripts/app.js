@@ -404,7 +404,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function getCuisineName(country) {
   const cuisineMap = {
     "Turkey": "Turkish",
-    "Polonya": "Eastern European", 
+    "Poland": "Eastern European", 
     "France": "French",
     "Italy": "Italian",
     "Spain": "Spanish",
