@@ -36,7 +36,17 @@ For HTTP Server: http://127.0.0.1:8080/RecipeFinder/index.html
 
 🌟 Features
 
-✅ Find Recipes by Ingredients – Users receive recipe suggestions based on added ingredients.✅ Location-Based Recipes – Provides local cuisine recipes based on the user's location.✅ IndexedDB Support – Ingredients and recipes are stored within the browser.✅ Offline Mode – Previously saved recipes can be accessed without an internet connection.✅ PWA Support – The app can be installed on mobile devices.✅ Service Worker Caching – Static files are cached for faster loading.
+✅ Find Recipes by Ingredients – Users receive recipe suggestions based on added ingredients.
+
+✅ Location-Based Recipes – Provides local cuisine recipes based on the user's location.
+
+✅ IndexedDB Support – Ingredients and recipes are stored within the browser.
+
+✅ Offline Mode – Previously saved recipes can be accessed without an internet connection.
+
+✅ PWA Support – The app can be installed on mobile devices.
+
+✅ Service Worker Caching – Static files are cached for faster loading.
 
 🛠️ Technologies
 
