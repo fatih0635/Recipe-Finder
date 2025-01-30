@@ -13,6 +13,7 @@ const loginButton = document.getElementById('login-button');
 const logoutButton = document.getElementById('logout-button');
 const cameraCaptureSection = document.getElementById('camera-capture');
 const showRecipesButton = document.getElementById('show-recipes-button');
+const countryRecipesButton = document.getElementById("country-recipes");
 
 let ingredients = [];
 let loggedIn = false;
@@ -75,6 +76,17 @@ document.addEventListener("DOMContentLoaded", () => {
   updateLanguage(defaultLanguage);
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("✅ Sayfa tamamen yüklendi!");
+  const countryRecipesButton = document.getElementById("country-recipes");
+
+  if (!countryRecipesButton) {
+    console.error("❌ Hata: Buton DOM içinde bulunamadı!");
+    return;
+  }
+
+  console.log("✅ Buton DOM içinde bulundu!", countryRecipesButton);
+});
 
 
 // Open IndexedDB Connection
@@ -106,13 +118,48 @@ function openIndexedDB() {
 }
 
 // Check Offline Status
+// ✅ Kullanıcının Offline Olup Olmadığını Kontrol Et
 function checkOffline() {
+  console.warn("📴 You are offline. Only saved recipes are available.");
   if (!navigator.onLine) {
-    alert("You are offline. Some features may not work.");
+    alert("⚠️ You are offline. Only saved recipes are available.");
     return true;
   }
   return false;
 }
+
+// ✅ API’den Tarif Çekerken Offline Kontrolü Yap
+async function fetchRecipes() {
+  if (checkOffline()) {
+    console.log("📴 Offline mode: Showing saved recipes.");
+    loadRecipesFromIndexedDB(); // ✅ İnternet yoksa cache'den yükle
+    return;
+  }
+
+  if (ingredients.length === 0) {
+    recipeResults.textContent = "Please add at least one ingredient.";
+    return;
+  }
+
+  const query = ingredients.join(",+");
+  const url = `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${query}&number=5&apiKey=83abb7c5dcd4458e92cb62efe246e27e`;
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("Error fetching recipes.");
+    const data = await response.json();
+    displayRecipes(data);
+  } catch (error) {
+    console.error("❌ Failed to load recipes:", error);
+    alert("Failed to load recipes. You might be offline.");
+  }
+}
+
+// ✅ Sayfa Yüklendiğinde API Çağrısı Yap
+document.addEventListener("DOMContentLoaded", () => {
+  fetchRecipes();
+});
+
 
 
 
@@ -286,6 +333,124 @@ function appendUserRecipe(name, description, imageSrc, saveToDB = true) {
     return;
   }
 
+  document.addEventListener('DOMContentLoaded', () => {
+    console.log("✅ Sayfa yüklendi!");
+    const countryRecipesButton = document.getElementById("country-recipes");
+  
+    if (!countryRecipesButton) {
+      console.error("Button with ID 'country-recipes' not found in the DOM.");
+      return;
+    }
+    console.log("✅ Buton bulundu:", countryRecipesButton);
+    countryRecipesButton.addEventListener("click", getUserLocation);
+    console.log("📍 Butona tıklandı, getUserLocation() çağırılıyor...");
+    getUserLocation();
+  });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const countryRecipesButton = document.getElementById("country-recipes");
+
+  if (!countryRecipesButton) {
+    console.error("❌ Buton bulunamadı!");
+    return;
+  }
+
+  countryRecipesButton.addEventListener("click", () => {
+    console.log("✅ Butona tıklandı, getUserLocation() çağırılıyor...");
+    getUserLocation();
+  });
+});
+
+  
+  // Kullanıcının konumunu al ve API'ye istekte bulun
+  function getUserLocation() {
+    console.log("📍 getUserLocation() çalıştırıldı!");
+
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          console.log(`User's Location: Lat: ${latitude}, Long: ${longitude}`);
+  
+          // OpenCage API ile ülkeyi belirleme
+          fetchCountryFromCoords(latitude, longitude);
+        },
+        (error) => {
+          console.error("Error getting location:", error);
+          alert("Location access denied. Please enable location services.");
+        }
+      );
+    } else {
+      console.error("❌ Tarayıcınız Geolocation desteklemiyor.");
+      alert("Geolocation is not supported by your browser.");
+    }
+  }
+  
+  // OpenCage API ile ülkeyi belirle ve yemek tarifleri API'sine istekte bulun
+  function fetchCountryFromCoords(lat, lon) {
+    const apiKey = "77783b5e219f492abccf0e4bbabe84b7";
+    fetch(`https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lon}&key=${apiKey}`)
+      .then((response) => response.json())
+      .then((data) => {
+        const country = data.results[0].components.country;
+        console.log("Detected Country:", country);
+        fetchLocalRecipes(country);
+      })
+      .catch((error) => console.error("Error fetching country:", error));
+  }
+  
+// Ülkeye göre Spoonacular API'nin tanıyabileceği mutfak ismini belirle
+function getCuisineName(country) {
+  const cuisineMap = {
+    "Turkey": "Turkish",
+    "Polonya": "Eastern European", 
+    "France": "French",
+    "Italy": "Italian",
+    "Spain": "Spanish",
+    "Mexico": "Mexican",
+    "India": "Indian",
+    "Japan": "Japanese",
+    "China": "Chinese",
+    "Thailand": "Thai",
+    "Germany": "German",
+    "United States": "American",
+    "United Kingdom": "British",
+    "Greece": "Greek",
+    "Korea": "Korean",
+  };
+
+  return cuisineMap[country] || country; // Eğer ülkesi eşleşmezse orijinal ismi kullan
+}
+
+
+  // Ülkeye göre yemek tarifleri çekme fonksiyonu (örnek API ile)
+  // Ülkeye göre yemek tarifleri çekme fonksiyonu
+  function fetchLocalRecipes(country) {
+    const cuisine = getCuisineName(country);
+    const apiKey = "83abb7c5dcd4458e92cb62efe246e27e"; 
+    const apiUrl = `https://api.spoonacular.com/recipes/complexSearch?cuisine=${cuisine}&apiKey=${apiKey}`;
+  
+    console.log(`🍽️ ${country} (${cuisine}) için yemek tarifleri getiriliyor...`);
+  
+    fetch(apiUrl)
+      .then(response => response.json())
+      .then(data => {
+        if (data.results.length > 0) {
+          console.log(`✅ ${country} yemekleri bulundu!`, data);
+          displayRecipes(data.results);
+        } else {
+          console.warn(`⚠️ ${country} (${cuisine}) için tarif bulunamadı.`);
+        }
+      })
+      .catch(error => console.error("❌ Tarifleri çekerken hata oluştu:", error));
+  }
+  
+
+  
+  
+  
+
 // Show/Hide Recipes
 showRecipesButton.addEventListener('click', () => {
   if (recipesContainer.style.display === 'none') {
@@ -297,7 +462,7 @@ showRecipesButton.addEventListener('click', () => {
     showRecipesButton.textContent = 'Show Recipes';
   }
 });
-});
+
 
 // Save Recipe to IndexedDB
 function saveRecipeToIndexedDB(recipe) {
@@ -461,6 +626,7 @@ async function fetchRecipes() {
 
 // Display Recipes
 function displayRecipes(recipes) {
+  const recipeResults = document.getElementById("recipe-results");
   recipeResults.innerHTML = '';
   if (!recipes || recipes.length === 0) {
     recipeResults.textContent = "No recipes found for the given ingredients.";
