@@ -2,6 +2,8 @@ TEAM MEMBERS: FATIH ALAN(36468)- FATIH ASA(36470)
 
 Recipe Finder
 
+![Ekran Resmi 2025-01-30 09 31 28](https://github.com/user-attachments/assets/c219a56e-11f3-4b69-b73d-62550c248a4e)
+
 Recipe Finder is a Progressive Web App (PWA) that helps users find recipes based on the ingredients they have and their current location. The application supports offline mode using IndexedDB and Service Worker.
 
 🚀 Installation & Running the Project
