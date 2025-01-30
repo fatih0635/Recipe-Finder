@@ -55,7 +55,10 @@ OpenCage API – Determines the user's country
 📝 How Does Offline Mode Work?
 
 1️⃣ Service Worker Setup: When the page is loaded for the first time, the sw.js file is registered in the browser.
+
 2️⃣ Caching: Essential files (index.html, app.js, offline.html, style.css, etc.) are cached.
+
 3️⃣ Offline Detection: If the user loses their internet connection, offline.html is displayed.
+
 4️⃣ Using IndexedDB: Recipes are saved while online and displayed when offline.
 
